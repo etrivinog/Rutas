@@ -21,18 +21,13 @@ struct cliente{
   string Apellido;
  
  };
- //se crea la estructura para consultar las rutas
- struct consultar{
-  string Origen;
-  string Destino;
-  string Fecha;
- };
  
- struct detalle{
-   string codigo;
- };
+struct Admin{
+	string identificacion;
+	string password;
+};
   // se crea la estuctura de las rutas
-struct inforuta{
+struct Ruta{
  string codigo;
  string rutas;
  string origen;
@@ -60,10 +55,11 @@ struct inforuta{
    cout<<"SE ENCUENTRAN REGISTRADOS: "<<n<<" CLIENTES"<<endl;
  }
 
- void cargardatosc(cliente c[], int &n){
+ void cargardatosc(cliente c[]){
+ 	int i = 0;
    ifstream f; string linea; char s=',';
    f.open("clientes.csv");
-   for(int i=0;i<n;i++){
+   while(!f.eof()){
      getline(f, linea, s);
      c[i].Usuario=linea;
      getline(f, linea, s);
@@ -73,6 +69,7 @@ struct inforuta{
      getline(f, linea);
      c[i].Apellido=linea;
    	 //cout<<c[i].Usuario<<" "<<c[i].Password<<" "<<c[i].Nombre<<" "<<c[i].Apellido<<endl;
+   	 i++;
    }
    f.close();
  }
@@ -89,7 +86,7 @@ struct inforuta{
    cout<<"HAY : "<<n<<" RUTAS"<<endl;
  }
 
- void cargardatosr(inforuta k[], int &n){
+ void cargardatosr(Ruta k[]){
    ifstream f; string linea; char s=',';
    f.open("rutas.csv");
    int i=0;
@@ -136,15 +133,8 @@ void datoscliente(cliente c[], int &n, string us, string pas){
    
  }
   // se crea una funcion que pida los datos para la consulta de rutas
-void consultarutas(consultar d[], int &n, string ori, string dest, string fec){
-  for(int i=0; i<n; i++){
-    cout<<"ORIGEN:";
-    cin>>ori;
-    cout<<"DESTINO:";
-    cin>>dest;
-    cout<<"FECHA (ejemplo:02-dic):";
-    cin>>fec;
-  }
+void consultarutas(Ruta rutas[]){
+  
    
  }
  
@@ -200,49 +190,50 @@ void datosamd(string us, string pa){
       
     }
     else{
-      cout<<"USUARIO O CONTRASEÑA INCORECTA";
+      cout<<"USUARIO O CONTRASEÃ‘A INCORECTA";
     }*/
 }
-void detalleruta(detalle det[], string j){
-   cout<<"INGRESE EL CODIGO DE LA RUTA"<<endl;
-   cin>>j;
+void detalleruta(){
+	string idRuta;
+   	cout<<"INGRESE EL CODIGO DE LA RUTA"<<endl;
+   	cin>>idRuta;
    
  }
 
 // salida: en la funcion main se llaman las funciones anteriormente declaradas y se imprimen los datos
 int main(){
-  // se declaran la variables 
-  int u=0;
-  string j;
-  string nom;
-  string ap;
-  int id;
-  string pas; 
-  string ori;
-  string dest;
-  string fec;
-  ifstream f;
-  //char fd;
-  string us;
-  cliente c[100];
-  inforuta k[100];
-  consultar d[100];
-  detalle det[100];
-  //administrador a[100];
-  obtcliente(u);
-  cargardatosc(c,u);
-  obtrutas(u);
-  cargardatosr(k,u);
+  	// se declaran la variables 
+  	int u=0;
+  	string j;
+  	string nombre;
+  	string apellido;
+  	int id;
+  	string password; 
+  	string origen;
+  	string destino;
+  	string fecha;
+  	ifstream f;
+ 	 //char fd;
+  	string us;
+  	
+  	cliente clientes[100];
+  	Ruta rutas[100];
   
-  menu(u);
+  	//administrador a[100];
+  	obtcliente(u);
+  	cargardatosc(clientes);
+  	obtrutas(u);
+  	cargardatosr(rutas);
+  
+  	menu(u);
   	
   	//Probar Los clientes
-  	cout<<c[1].Usuario<<" "<<c[1].Password<<" "<<c[1].Nombre<<" "<<c[1].Apellido<<endl;
+  	cout<<clientes[1].Usuario<<" "<<clientes[1].Password<<" "<<clientes[1].Nombre<<" "<<clientes[1].Apellido<<endl;
   	//Probar las rutas
-	cout<<k[1].codigo<<" "<<k[1].rutas<<" "<<k[1].origen<<" ";
-	cout<<k[1].destino<<" "<<k[1].disponibilidad<<" "<<k[1].tipo<<" ";
-	cout<<k[1].hora<<" "<<k[1].cupo<<" "<<k[1].disponible<<" ";
-	cout<<k[1].ocupada<<" "<<k[1].fecha<<" "<<k[1].precio<<endl;
+	cout<<rutas[1].codigo<<" "<<rutas[1].rutas<<" "<<rutas[1].origen<<" ";
+	cout<<rutas[1].destino<<" "<<rutas[1].disponibilidad<<" "<<rutas[1].tipo<<" ";
+	cout<<rutas[1].hora<<" "<<rutas[1].cupo<<" "<<rutas[1].disponible<<" ";
+	cout<<rutas[1].ocupada<<" "<<rutas[1].fecha<<" "<<rutas[1].precio<<endl;
 	
 	if(u == 1){
   	
@@ -250,16 +241,6 @@ int main(){
 	
 	}else{
   	cout<<"::GRACIAS POR CONSULTAR NUESTRO MENU::"<<endl;// se imprime un mensaje de salida
-  } 
-  if(u==1){// se crea la condicion al ser escogido la opcion 1 del menu 
-      
-     
-  }
-  else if(u==2){// se crea la condicion al ser operacionadministrador
-    
-  }
-  else {
-    cout<<"::GRACIAS POR CONSULTAR NUESTRO MENU::"<<endl;// se imprime un mensaje de salida
-  }
+  	}
   return 0;
 }
