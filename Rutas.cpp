@@ -59,7 +59,11 @@ struct Ruta{
    	 //cout<<c[i].Usuario<<" "<<c[i].Password<<" "<<c[i].Nombre<<" "<<c[i].Apellido<<endl;
    	 i++;
    }
-   cout<<"SE ENCUENTRAN REGISTRADOS: "<<i<<" CLIENTES"<<endl;
+   
+   //Se marca el ùltimo cliente como null para saber que ya no hay mas clientes
+   //en el vector
+   c[i].Usuario = '\0';
+   cout<<"SE HAN CARGADO: "<<i<<" CLIENTES"<<endl;
    f.close();
  }
  //se cargan los datos del archivo rutas
@@ -95,8 +99,10 @@ struct Ruta{
      
      i++;
    }
+   //Se marca la ùltima ruta como nula para indicar que no hay màs rutas en el vector
+   k[i].codigo = "\0";
    f.close();
-   cout<<"HAY : "<<i<<" RUTAS"<<endl;
+   cout<<"SE HAN CARGADO: "<<i<<" RUTAS"<<endl;
  }
    
  
@@ -109,24 +115,19 @@ void datoscliente(cliente c[], int &n, string us, string pas){
     cin>>pas;
   }
    
- }
-  // se crea una funcion que pida los datos para la consulta de rutas
-void consultarutas(Ruta rutas[]){
-  
-   
- }
+}
  
  // se crea un menu inicial que determina que tipo de usuario ingresa a la plataforma
 void menu ( int &n ){   
-  cout<<":::BIEMBENIDO A EL SISTEMA DE FACTURACION :::"<<endl;
+  cout<<"\n\n:::BIEMBENIDO A EL SISTEMA DE FACTURACION :::"<<endl;
   cout<<"1- USUARIO"<<endl;
   cout<<"2-ADMINISTRADOR"<<endl;
   cout<<"3-EXIT"<<endl;
-  cout<<"INGRESE SU OPCION:";
+  cout<<"\nINGRESE SU OPCION:";
   cin>>n;
    
   //system("PAUSE");
-  //system("CLS");
+  system("CLS");
 }
 //funcion para elmenu de  pago del pasaje 
 void pago(int &n){
@@ -167,7 +168,79 @@ void detalleruta(){
    	cout<<"INGRESE EL CODIGO DE LA RUTA"<<endl;
    	cin>>idRuta;
    
- }
+}
+
+void consultarRuta(Ruta rutas[]){
+	
+	string origen, destino, fecha;
+	cout<<"..::CONSULTA DE RUTAS::.."
+	cout<<"INGRESE UN ORIGEN: ";
+	cin>>origen;
+	cout<<"INGRESE UN DESTINO: ";
+	cin>>destino;
+	cout<<"INGRESE UNA FECHA (Ej: 02-dic): ";
+	cin>>fecha;
+	
+	//Variable para èndice del vector
+	int i = 0;
+	//Recorrer todas las rutas
+	while(rutas[i].codigo != "\0"){
+		
+		//Compara el origen, el destino y la fecha cada ruta con los datos ingresados.
+		if(rutas[i].origen == origen && rutas[i].destino == destino && rutas[i].fecha == fecha){
+			
+			cout<<"RUTAS ENCONTRADAS:"<<endl<<endl;
+			
+			//Mostrar información de la ruta
+			cout<<rutas[i].codigo<<" "<<rutas[i].rutas<<" "<<rutas[i].origen<<" ";
+			cout<<rutas[i].destino<<" "<<rutas[i].disponibilidad<<" "<<rutas[i].tipo<<" ";
+			cout<<rutas[i].hora<<" "<<rutas[i].cupo<<" "<<rutas[i].disponible<<" ";
+			cout<<rutas[i].ocupada<<" "<<rutas[i].fecha<<" "<<rutas[i].precio<<endl;
+			
+		}
+		
+		//Se aumeta el contador
+		i++;
+		
+	}
+	
+}
+
+bool iniciarUsuario(cliente clientes[]){
+	
+	string usuario, password;
+	
+	cout<<"INGRESE USUARIO: ";
+	cin>>usuario;
+	cout<<"INGRESE PASSWORD: ";
+	cin>>password;
+	
+	//Variable para recorrer los clientes
+	int i=0;
+	//Recorrer los clientes
+	while(clientes[i].Usuario != "\0"){
+		
+		//Comparar el Usuario y la contraseña
+		if(clientes[i].Usuario == usuario && clientes[i].Password == password){
+			
+			//Si encuentra el cliente con ese id y con ese password
+			cout<<"\n\nUSUARIO ENCONTRADO\n";
+			system("PAUSE");
+			//retorna true
+			return true;
+			
+		}
+		//Aumenta la variable para recorrer los clientes
+		i++;
+		
+	}
+	
+	//Si llega a esta punto es porque no hubo algùn cliente con el usuario
+	//y el password ingresados.
+	//Retorna false
+	return false;
+	
+}
 
 // salida: en la funcion main se llaman las funciones anteriormente declaradas y se imprimen los datos
 int main(){
@@ -185,8 +258,10 @@ int main(){
  	 //char fd;
   	string us;
   	
-  	cliente clientes[100];
-  	Ruta rutas[100];
+  	bool sesion;
+  	
+  	cliente clientes[1000];
+  	Ruta rutas[1000];
   
   	//administrador a[100];
   	cargardatosc(clientes);
@@ -195,16 +270,26 @@ int main(){
   	menu(opc);
   	
   	//Probar Los clientes
-  	cout<<clientes[1].Usuario<<" "<<clientes[1].Password<<" "<<clientes[1].Nombre<<" "<<clientes[1].Apellido<<endl;
+  	//cout<<clientes[1].Usuario<<" "<<clientes[1].Password<<" "<<clientes[1].Nombre<<" "<<clientes[1].Apellido<<endl;
   	//Probar las rutas
-	cout<<rutas[1].codigo<<" "<<rutas[1].rutas<<" "<<rutas[1].origen<<" ";
+	/*cout<<rutas[1].codigo<<" "<<rutas[1].rutas<<" "<<rutas[1].origen<<" ";
 	cout<<rutas[1].destino<<" "<<rutas[1].disponibilidad<<" "<<rutas[1].tipo<<" ";
 	cout<<rutas[1].hora<<" "<<rutas[1].cupo<<" "<<rutas[1].disponible<<" ";
-	cout<<rutas[1].ocupada<<" "<<rutas[1].fecha<<" "<<rutas[1].precio<<endl;
+	cout<<rutas[1].ocupada<<" "<<rutas[1].fecha<<" "<<rutas[1].precio<<endl;*/
 	
 	if(opc == 1){//Si se autenticó como cliente
   		
-  		//consultarRuta(rutas);
+  		//Si iniciar usuario devulve false hubo un error en el inicio de sesión,
+  		//Si devuelve true, inició sesión correctamente.
+  		sesion = iniciarUsuario(clientes);
+  		
+  		if(sesion == true){
+			consultarRuta(rutas);
+		}
+		else
+		{
+			cout<<"\n\nVERIFIQUE LOS DATOS DE INICIO DE SESIÓN\n\n";
+		}
   		
 	}else if(opc == 2){//Si se autenticó como administrador
 	
