@@ -40,21 +40,9 @@ struct Ruta{
  int ocupada;
  string fecha;
  float precio;
-  };
+};
 
 //se cargan los datos del archivo clientes 
- void obtcliente(int &n){
-   ifstream f;  string linea;
-   f.open("clientes.csv");
-   while(!f.eof()){
-     getline(f,linea);
-     //cout<<linea<<endl;
-     n++;
-   }
-   f.close();
-   cout<<"SE ENCUENTRAN REGISTRADOS: "<<n<<" CLIENTES"<<endl;
- }
-
  void cargardatosc(cliente c[]){
  	int i = 0;
    ifstream f; string linea; char s=',';
@@ -71,21 +59,10 @@ struct Ruta{
    	 //cout<<c[i].Usuario<<" "<<c[i].Password<<" "<<c[i].Nombre<<" "<<c[i].Apellido<<endl;
    	 i++;
    }
+   cout<<"SE ENCUENTRAN REGISTRADOS: "<<i<<" CLIENTES"<<endl;
    f.close();
  }
  //se cargan los datos del archivo rutas
- void obtrutas(int &n){
-   ifstream f;  string linea;
-   n=0;
-   f.open("rutas.csv");
-   while(!f.eof()){
-     getline(f,linea);
-     n++;
-   }
-   f.close();
-   cout<<"HAY : "<<n<<" RUTAS"<<endl;
- }
-
  void cargardatosr(Ruta k[]){
    ifstream f; string linea; char s=',';
    f.open("rutas.csv");
@@ -119,6 +96,7 @@ struct Ruta{
      i++;
    }
    f.close();
+   cout<<"HAY : "<<i<<" RUTAS"<<endl;
  }
    
  
@@ -158,16 +136,7 @@ void pago(int &n){
   cout<<"3-EFECTIVO"<<endl;
   
 }
-// esta funcion es la encargada de el menu de funcionamiento de un cliente
-void operacioncliente( cliente c[], int &n){
-  cout<<":::OPCIONES DEL USUARIO:::"<<endl;
-  cout<<"1-CONSULTAR LAS RUTAS DISPONIBLES POR DESTINO"<<endl;
-  cout<<"2-VER DETALLE DE LA RUTA"<<endl;
-  cout<<"3-CONSULTAR LA CANTIDAD DE ASIENTOS DISPONIBLES"<<endl;
-  cout<<"4-COMPRAR UN TIQUETE"<<endl;
-  
-  cin>>n;
-}
+
 // esta funcion es la encargada de el menu de funcionamiento de un 
 void operacionadministrador(int &opcion){
   cout<<":::OPCIONES DEL ADMINISTRADOR:::"<<endl;
@@ -203,7 +172,7 @@ void detalleruta(){
 // salida: en la funcion main se llaman las funciones anteriormente declaradas y se imprimen los datos
 int main(){
   	// se declaran la variables 
-  	int u=0;
+  	int opc=0;
   	string j;
   	string nombre;
   	string apellido;
@@ -220,12 +189,10 @@ int main(){
   	Ruta rutas[100];
   
   	//administrador a[100];
-  	obtcliente(u);
   	cargardatosc(clientes);
-  	obtrutas(u);
   	cargardatosr(rutas);
   
-  	menu(u);
+  	menu(opc);
   	
   	//Probar Los clientes
   	cout<<clientes[1].Usuario<<" "<<clientes[1].Password<<" "<<clientes[1].Nombre<<" "<<clientes[1].Apellido<<endl;
@@ -235,12 +202,14 @@ int main(){
 	cout<<rutas[1].hora<<" "<<rutas[1].cupo<<" "<<rutas[1].disponible<<" ";
 	cout<<rutas[1].ocupada<<" "<<rutas[1].fecha<<" "<<rutas[1].precio<<endl;
 	
-	if(u == 1){
-  	
-	}else if(u == 2){
+	if(opc == 1){//Si se autenticó como cliente
+  		
+  		//consultarRuta(rutas);
+  		
+	}else if(opc == 2){//Si se autenticó como administrador
 	
-	}else{
-  	cout<<"::GRACIAS POR CONSULTAR NUESTRO MENU::"<<endl;// se imprime un mensaje de salida
+	}else{//Opción salir
+  		cout<<"::GRACIAS POR CONSULTAR NUESTRO MENU::"<<endl;// se imprime un mensaje de salida
   	}
   return 0;
 }
