@@ -28,6 +28,7 @@ struct Admin{
 	string password;
 };
 
+
 struct Reserva{
 	
 	string ruta;
