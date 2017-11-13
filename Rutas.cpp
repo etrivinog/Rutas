@@ -173,7 +173,7 @@ void detalleruta(){
 void consultarRuta(Ruta rutas[]){
 	
 	string origen, destino, fecha;
-	cout<<"..::CONSULTA DE RUTAS::.."
+	cout<<"..::CONSULTA DE RUTAS::..";
 	cout<<"INGRESE UN ORIGEN: ";
 	cin>>origen;
 	cout<<"INGRESE UN DESTINO: ";
@@ -242,6 +242,47 @@ bool iniciarUsuario(cliente clientes[]){
 	
 }
 
+void menuAdmin(){
+	cout<<"OPCIONES PARA EL ADMINISTRADOR"<<endl<<endl;
+	cout<<"1. REGISTRAR NUEVO USUARIO"<<endl;
+	cout<<"2. LISTAR TODOS LOS USUARIO"<<endl;
+	cout<<"3. BUSCAR PERSONA POR ID"<<endl;
+	cout<<"4. VER EL TOTAL DE RESERVAS REALIZADAS POR CADA RUTA"<<endl;
+	cout<<"5. VER EL TOTAL DE RESERVAS ORIGEN-DESTINO"<<endl;
+	cout<<"6. ENUMERAR VIAJES INTERNACIONALES Y NACIONALES"<<endl;
+	cout<<"7. SALIR"<<endl;	
+	
+	
+}
+
+void archivarcliente(string linea1){
+	string frase;
+	ofstream archivo;
+	archivo.open("clientes.csv",ios::app);
+  	archivo << linea1;
+	archivo.close();
+}
+
+int contarclientes(cliente clientes[]){
+	int i=0;
+	while(clientes[i].Usuario != "\0"){
+		i++;
+	}
+	return i;
+}
+
+void imprimirclientes(cliente clientes[]){
+	int i=0;
+	cout<<"  ID                  PASSWORD                  NOMBRE                  APELLIDO"<<endl;
+	cout<<"--------------------------------------------------------------------------------"<<endl;
+	while(clientes[i].Usuario != "\0"){
+		//cout<<clientes[i].Usuario
+		cout<<clientes[i].Usuario<<"                  "<<clientes[i].Password<<"                  ";
+		cout<<clientes[i].Nombre<<"                  "<<clientes[i].Apellido<<endl;
+		i++;
+	}
+}
+
 // salida: en la funcion main se llaman las funciones anteriormente declaradas y se imprimen los datos
 int main(){
   	// se declaran la variables 
@@ -277,7 +318,7 @@ int main(){
 	cout<<rutas[1].hora<<" "<<rutas[1].cupo<<" "<<rutas[1].disponible<<" ";
 	cout<<rutas[1].ocupada<<" "<<rutas[1].fecha<<" "<<rutas[1].precio<<endl;*/
 	
-	if(opc == 1){//Si se autenticó como cliente
+	if(opc == 1){//Si se autentic� como cliente
   		
   		//Si iniciar usuario devulve false hubo un error en el inicio de sesión,
   		//Si devuelve true, inició sesión correctamente.
@@ -291,9 +332,49 @@ int main(){
 			cout<<"\n\nVERIFIQUE LOS DATOS DE INICIO DE SESIÓN\n\n";
 		}
   		
-	}else if(opc == 2){//Si se autenticó como administrador
-	
-	}else{//Opción salir
+	}else if(opc == 2){//Si se autentic� como administrador
+		int op=1, pos=0;
+		string id1, password1, nombre1, apellido1, linea1="";
+		while(op!=7){
+			system("cls");
+			menuAdmin();
+			cin>>op;
+			switch(op){
+				case 1:
+					system("cls");
+					cout<<"INGRESAR UN NUEVO CLIENTE"<<endl<<endl;
+					cout<<"INGRESE ID DE USUARIO: ";
+					cin>>id1;
+					do{					
+						cout<<"INGRESE PASSWORD DE USUARIO (4 DIGITOS): ";
+						cin>>password1;
+					}while(password1.size()!=4);					
+					cout<<"INGRESE NOMBRE DE USUARIO: ";
+					cin>>nombre1;
+					cout<<"INGRESE APELLIDO DE USUARIO: ";
+					cin>>apellido1;	
+					pos=contarclientes(clientes);
+					clientes[pos].Usuario=id1;				
+					clientes[pos].Password=password1;				
+					clientes[pos].Nombre=nombre1;				
+					clientes[pos].Apellido=apellido1;
+					linea1='\n'+id1+','+password1+','+nombre1+','+apellido1;			
+					archivarcliente(linea1);
+					cout<<"GUARDADO EXITOSAMENTE"<<endl;
+					system("pause");
+					break;
+				case 2:
+					system("cls");
+					cout<<"LISTADO DE CLIENTES"<<endl<<endl;
+					imprimirclientes(clientes);
+					system("pause");					
+					break;
+				case 3:
+					break;
+				default: break;
+			}
+		}
+	}else{//Opci�n salir
   		cout<<"::GRACIAS POR CONSULTAR NUESTRO MENU::"<<endl;// se imprime un mensaje de salida
   	}
   return 0;
