@@ -10,6 +10,7 @@
 #include <string>
 #include<cstdlib>
 #include <sstream>
+#include <time.h>
 using namespace std;
 //inicio: se emplean las estructuras necesarias para los clientes y administradores
 
@@ -26,6 +27,19 @@ struct Admin{
 	string identificacion;
 	string password;
 };
+
+
+struct Reserva{
+	
+	string ruta;
+	string origen;
+	string destino;
+	string identicifacionCliente;
+	//Se sabe si el cliente viaja al extranjero o al interior des pais
+	//verificando el destino.
+	
+}reservas[1000];
+
   // se crea la estuctura de las rutas
 struct Ruta{
  string codigo;
@@ -62,7 +76,7 @@ struct Ruta{
    
    //Se marca el ùltimo cliente como null para saber que ya no hay mas clientes
    //en el vector
-   c[i].Usuario = '\0';
+   c[i].Usuario = "\0";
    cout<<"SE HAN CARGADO: "<<i<<" CLIENTES"<<endl;
    f.close();
  }
@@ -105,21 +119,9 @@ struct Ruta{
    cout<<"SE HAN CARGADO: "<<i<<" RUTAS"<<endl;
  }
    
- 
- // se crea una funcion que pida los datos para el registro de un cliente
-void datoscliente(cliente c[], int &n, string us, string pas){
-  for(int i=0; i<n; i++){
-    cout<<"USUARIO:";
-    cin>>us;
-    cout<<"PASSWORD:";
-    cin>>pas;
-  }
-   
-}
- 
  // se crea un menu inicial que determina que tipo de usuario ingresa a la plataforma
 void menu ( int &n ){   
-  cout<<"\n\n:::BIEMBENIDO A EL SISTEMA DE FACTURACION :::"<<endl;
+  cout<<"\n\n:::BIENVENIDO A EL SISTEMA DE FACTURACION :::"<<endl;
   cout<<"1- USUARIO"<<endl;
   cout<<"2-ADMINISTRADOR"<<endl;
   cout<<"3-EXIT"<<endl;
@@ -130,7 +132,7 @@ void menu ( int &n ){
   system("CLS");
 }
 //funcion para elmenu de  pago del pasaje 
-void pago(int &n){
+void pago(string &n){
   cout<<"INDIQUE LA FORMA DE PAGO DEL PASAJE:"<<endl;
   cout<<"1-TARJETA DE CREDITO"<<endl;
   cout<<"2-TARJETA DEBITO"<<endl;
@@ -150,46 +152,115 @@ void operacionadministrador(int &opcion){
   cout<<"7-VER EL NUMERO DE PERSONAS QUE SOLICITARON RESERVAS DENTRO DEL PAIS"<<endl;
   cin>>opcion;
 }
-void datosamd(string us, string pa){
-    cout<<"USUARIO:";
-    cin>>us;
-    cout<<"PASSWORD:";
-    cin>>pa;
-    /*if(us= "mafe" and pa= 4321){
-     operacionadministrador(n);
-      
-    }
-    else{
-      cout<<"USUARIO O CONTRASEÑA INCORECTA";
-    }*/
-}
-void detalleruta(){
-	string idRuta;
-   	cout<<"INGRESE EL CODIGO DE LA RUTA"<<endl;
-   	cin>>idRuta;
-   
+
+void comprar(string codigoRuta, Ruta rutas[], cliente cliente1){
+	
+	//Variable para recorrer las rutas
+	int i = 0;
+	string medioDePago;//Medio de pago
+	//Ciclo para recorrer las rutas
+	while(rutas[i].codigo != "\0"){
+		
+		//Si la ruta actual es la ruta de la que se quiere comprar
+		if(rutas[i].codigo == codigoRuta){
+			
+			//Si la ruta aún tiene cupos disponibles
+			if(rutas[i].disponible > 0){
+				//Se resta un cupo disponible a la ruta
+				rutas[i].disponible--;
+				//Se aumenta un cupo ocupado a la ruta
+				rutas[i].ocupada++;
+				
+				cout<<"ESCOGA UN MEDIO DE PAGO:\n\n";
+				cout<<"1. Efectivo\n";
+				cout<<"2. Tarjeta\n";
+				cout<<"INGRESE UNA OPCION: ";
+				cin>>medioDePago;
+				
+				if(medioDePago == "1"){
+					medioDePago = "EFECTIVO";
+				}else if(medioDePago == "2"){
+					medioDePago = "TARJETA";
+				}
+				
+				srand(time(NULL));
+				
+				int tiquete = rand();
+				
+				cout<<"\n\n¡TIQUETE COMPRADO CON EXTIO!\n\n";
+				
+				cout<<"Empresa:                Los mas rapidos y furiosos 2\n";
+				cout<<"Codigo del tiquete:     "<<tiquete<<endl;
+				cout<<"Origen:                 "<<rutas[i].origen<<endl;
+				cout<<"Destino:                "<<rutas[i].destino<<endl;
+				cout<<"Fecha de viaje:         "<<rutas[i].fecha<<endl;
+				cout<<"Hora de viaje:          "<<rutas[i].hora<<endl;
+				cout<<"Precio:                 "<<rutas[i].precio<<endl;
+				cout<<"Silla:                  "<<rutas[i].ocupada<<endl; //La silla es la ocupada
+				cout<<"Forma de pago:          "<<medioDePago<<endl;
+				cout<<"Nombre Pasajero:        "<<cliente1.Nombre<<endl;
+				cout<<"Documento del pasajero: "<<cliente1.Usuario<<endl; //Es la identificacion
+				
+				//Si se ha la cantidad de silla ocupadas
+				//es igual al cupo màximo, se indica que
+				//la ruta no està disponible
+				if(rutas[i].ocupada == rutas[i].cupo){
+					rutas[i].disponibilidad = "false";
+				}
+				
+				//Se crea la reserva
+				int x = 0;
+				while(reservas[x].destino != "\0"){
+					x++;//Aumenta la x
+				}
+				
+				//Actualizar archivo de rutas
+				
+			}else{
+				//Si no tiene cupos disponibles, se da un mensaje de error
+				cout<<"\n\n¡LO SENTIMOS, ESTA RUTA NO TIENE CUPOS DOSPONIBLES!\n";
+			}
+			
+			//Terminar el ciclo de recorrer las rutas
+			break;
+			
+		}
+		
+		//Aumenta la variable
+		i++;
+		
+	}
+	
 }
 
-void consultarRuta(Ruta rutas[]){
+void consultarRuta(Ruta rutas[],cliente cliente1){
 	
 	string origen, destino, fecha;
 	cout<<"..::CONSULTA DE RUTAS::..";
+<<<<<<< HEAD
 	cout<<"INGRESE UN ORIGEN: ";
+=======
+	cout<<"\nINGRESE UN ORIGEN: ";
+>>>>>>> a46b77bb3552c9a59970c406f3d31d7edb32ba60
 	cin>>origen;
 	cout<<"INGRESE UN DESTINO: ";
 	cin>>destino;
 	cout<<"INGRESE UNA FECHA (Ej: 02-dic): ";
 	cin>>fecha;
 	
+		
+	cout<<"RUTAS ENCONTRADAS:"<<endl<<endl;
+	cout<<"ID\tORIGEN\tDESTINO\tTIPO\tHORA\tCUPOS\tFECHA\tPRECIO"<<endl;
+    cout<<"------------------------------------------------------------------------"<<endl;
+	
 	//Variable para èndice del vector
 	int i = 0;
 	//Recorrer todas las rutas
 	while(rutas[i].codigo != "\0"){
 		
-		//Compara el origen, el destino y la fecha cada ruta con los datos ingresados.
-		if(rutas[i].origen == origen && rutas[i].destino == destino && rutas[i].fecha == fecha){
-			
-			cout<<"RUTAS ENCONTRADAS:"<<endl<<endl;
+		//Compara el origen, el destino y la fecha cada ruta con los datos ingresados
+		//y verifica que esté disponible
+		if(rutas[i].origen == origen && rutas[i].destino == destino && rutas[i].fecha == fecha && rutas[i].disponibilidad == "true"){
 			
 			//Mostrar información de la ruta
 			cout<<rutas[i].codigo<<" "<<rutas[i].rutas<<" "<<rutas[i].origen<<" ";
@@ -199,14 +270,52 @@ void consultarRuta(Ruta rutas[]){
 			
 		}
 		
-		//Se aumeta el contador
+		//Se aumenta el contador
 		i++;
 		
 	}
 	
+	char opc;
+	string codigo;
+	
+	//Ciclo para comprar tiquetes
+		//Pregunta si desea comprar un tiquete
+		cout<<"¿\nCOMPRAR TIQUETE?\n";
+		cout<<"\n1. SI\n";
+		cout<<"2. NO\n";
+		
+		cout<<"\nINGRESE UNA OPCION: ";
+		cin>>opc;
+		
+	do{
+		//Si el usuario deea comprar
+		if(opc == '1'){
+			
+			//Se pide el còdigo de la ruta que desea comprar
+			cout<<"\nINGRESE EL CÓDIGO DE LA RUTA: ";
+			cin>>codigo;
+			
+			//Se ejecuta la funciòn de hacer la compra
+			comprar(codigo,rutas,cliente1);
+			
+			//Pregunta si desea comprar otro tiquete
+			cout<<"\n¿DESEA COMPRAR OTRO TIQUETE?\n";
+			cout<<"1. SI\n";
+			cout<<"2. NO\n";
+			cout<<"INGRESE UNA OPCIÓN: ";
+			cin>>opc;
+			
+		}else{
+			//Si no desea comprar, se sale de la función
+			return;
+		}
+		
+		
+	}while(opc == '1');//Se repite si la opción es 1.
+	
 }
 
-bool iniciarUsuario(cliente clientes[]){
+bool iniciarUsuario(cliente clientes[], cliente &c){
 	
 	string usuario, password;
 	
@@ -225,6 +334,12 @@ bool iniciarUsuario(cliente clientes[]){
 			
 			//Si encuentra el cliente con ese id y con ese password
 			cout<<"\n\nUSUARIO ENCONTRADO\n";
+			
+			//Carga los datos en sesion
+			c.Nombre   = clientes[i].Nombre;
+			c.Apellido = clientes[i].Apellido;
+			c.Usuario  = clientes[i].Usuario;
+			
 			system("PAUSE");
 			//retorna true
 			return true;
@@ -286,6 +401,7 @@ void imprimirclientes(cliente clientes[]){
 // salida: en la funcion main se llaman las funciones anteriormente declaradas y se imprimen los datos
 int main(){
   	// se declaran la variables 
+  	cliente clienteSesion;
   	int opc=0;
   	string j;
   	string nombre;
@@ -303,6 +419,7 @@ int main(){
   	
   	cliente clientes[1000];
   	Ruta rutas[1000];
+  	reservas[0].destino = "\0"; //Declaramos la primera reserva nula;
   
   	//administrador a[100];
   	cargardatosc(clientes);
@@ -322,10 +439,24 @@ int main(){
   		
   		//Si iniciar usuario devulve false hubo un error en el inicio de sesión,
   		//Si devuelve true, inició sesión correctamente.
-  		sesion = iniciarUsuario(clientes);
+  		sesion = iniciarUsuario(clientes,clienteSesion);
   		
   		if(sesion == true){
-			consultarRuta(rutas);
+  			string opc2;
+  			for(;;){
+				consultarRuta(rutas, clienteSesion);
+				
+				cout<<"\n\n¿DESEA SALIR?\n";
+				cout<<"1. SI\n";
+				cout<<"OTRA TECLA. NO\n";
+				cout<<"INGRESE UNA OPCION:";
+				cin>>opc2;
+				
+				if(opc2 != "1"){
+					break;
+				}
+				
+			}
 		}
 		else
 		{
