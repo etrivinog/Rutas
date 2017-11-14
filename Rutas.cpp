@@ -236,10 +236,6 @@ void consultarRuta(Ruta rutas[],cliente cliente1){
 	
 	string origen, destino, fecha;
 	cout<<"..::CONSULTA DE RUTAS::..";
-<<<<<<< HEAD
-	cout<<"INGRESE UN ORIGEN: ";
-=======
->>>>>>> 06f7b704619affa8c47355106b282aca64c7bda6
 	cout<<"\nINGRESE UN ORIGEN: ";
 	cin>>origen;
 	cout<<"INGRESE UN DESTINO: ";
@@ -389,7 +385,6 @@ void imprimirclientes(cliente clientes[]){
 	}
 }
 
-<<<<<<< HEAD
 int buscarcliente(cliente clientes[], string id1){//manda la posición del elemento buscado, sino retorna -1
 	int i=0;
 	while(clientes[i].Usuario != "\0"){
@@ -401,7 +396,6 @@ int buscarcliente(cliente clientes[], string id1){//manda la posición del elemen
 	return -1;
 }
 
-=======
 void archivarcliente(string linea1){
 	string frase;
 	ofstream archivo;
@@ -410,8 +404,109 @@ void archivarcliente(string linea1){
 	archivo.close();
 }
 
+void numeroreservas(Ruta rutas[]){
+	int i=0;
+	cout<<endl;
+	while(rutas[i].codigo != "\0"){
+		cout<<"PARA LA RUTA "<<rutas[i].codigo<<"SE HAN HECHO "<<rutas[i].disponible<<"RESERVAS"<<endl;
+		i++;
+	}
+}
 
->>>>>>> 06f7b704619affa8c47355106b282aca64c7bda6
+void origendestino(Ruta rutas[]){//Para una lista ordenada por origen-destino
+	int i=0, cont1=0;
+	cout<<"Origen \t  Destino \t  Numero de reservas"<<endl;
+	cout<<"---------------------------------------------"<<endl;
+	while(rutas[i].codigo != "\0"){
+		if(rutas[i].origen=="bogota" && rutas[i].destino=="cartagena"){
+			cont1+=rutas[i].disponible;
+		}
+		i++;
+	}
+	cout<<"Bogota   \t  Cartagena \t "<<cont1<<endl;
+	
+	i=0, cont1=0;
+	while(rutas[i].codigo != "\0"){
+		if(rutas[i].origen=="cartagena" && rutas[i].destino=="bogota"){
+			cont1+=rutas[i].disponible;
+		}
+		i++;
+	}
+	cout<<"Cartagena \t  Bogota \t "<<cont1<<endl;
+	
+	i=0, cont1=0;
+	while(rutas[i].codigo != "\0"){
+		if(rutas[i].origen=="bogota" && rutas[i].destino=="medellin"){
+			cont1+=rutas[i].disponible;
+		}
+		i++;
+	}
+	cout<<"Bogota   \t  Medellin \t "<<cont1<<endl;
+	
+	i=0, cont1=0;
+	while(rutas[i].codigo != "\0"){
+		if(rutas[i].origen=="medellin" && rutas[i].destino=="bogota"){
+			cont1+=rutas[i].disponible;
+		}
+		i++;
+	}
+	cout<<"Medellin \t  Bogota \t "<<cont1<<endl;
+	
+		i=0, cont1=0;
+	while(rutas[i].codigo != "\0"){
+		if(rutas[i].origen=="cartagena" && rutas[i].destino=="medellin"){
+			cont1+=rutas[i].disponible;
+		}
+		i++;
+	}
+	cout<<"Cartagena \t  Medellin \t "<<cont1<<endl;
+	
+		i=0, cont1=0;
+	while(rutas[i].codigo != "\0"){
+		if(rutas[i].origen=="medellin" && rutas[i].destino=="cartagena"){
+			cont1+=rutas[i].disponible;
+		}
+		i++;
+	}
+	cout<<"Mededellin \t  Cartagena \t "<<cont1<<endl;
+	
+		i=0, cont1=0;
+	while(rutas[i].codigo != "\0"){
+		if(rutas[i].origen=="cartagena" && rutas[i].destino=="caracas"){
+			cont1+=rutas[i].disponible;
+		}
+		i++;
+	}
+	cout<<"Cartagena \t  Caracas \t "<<cont1<<endl;
+	
+		i=0, cont1=0;
+	while(rutas[i].codigo != "\0"){
+		if(rutas[i].origen=="bogota" && rutas[i].destino=="caracas"){
+			cont1+=rutas[i].disponible;
+		}
+		i++;
+	}
+	cout<<"Bogota   \t  Caracas \t "<<cont1<<endl;
+	
+		i=0, cont1=0;
+	while(rutas[i].codigo != "\0"){
+		if(rutas[i].origen=="caracas" && rutas[i].destino=="bogota"){
+			cont1+=rutas[i].disponible;
+		}
+		i++;
+	}
+	cout<<"Caracas \t  Bogota \t "<<cont1<<endl;
+	
+		i=0, cont1=0;
+	while(rutas[i].codigo != "\0"){
+		if(rutas[i].origen=="caracas" && rutas[i].destino=="cartagena"){
+			cont1+=rutas[i].disponible;
+		}
+		i++;
+	}
+	cout<<"Caracas \t  Cartagena \t "<<cont1<<endl;
+}
+
 // salida: en la funcion main se llaman las funciones anteriormente declaradas y se imprimen los datos
 int main(){
   	// se declaran la variables 
@@ -536,10 +631,28 @@ int main(){
 					}										
 					system("pause");
 					break;
+				case 4:
+				system("cls");
+					cout<<"LISTADO DE RESERVAS"<<endl<<endl;
+					numeroreservas(rutas);
+					system("pause");					
+					break;
+				case 5:
+				system("cls");
+					cout<<"TOTAL DE RESERVAS ORIGEN-DESTINO"<<endl<<endl;
+					origendestino(rutas);
+					system("pause");					
+					break;
+				case 6:
+				system("cls");
+					cout<<"ENUMERAR VIAJES INTERNACIONALES Y NACIONALES"<<endl<<endl;
+					//FAlta este
+					system("pause");					
+					break;
 				default: break;
 			}
 		}
-	}else{//OpciÃ³n salir
+	}else{//Opción salir
   		cout<<"::GRACIAS POR CONSULTAR NUESTRO MENU::"<<endl;// se imprime un mensaje de salida
   	}
   return 0;
