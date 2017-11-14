@@ -28,17 +28,6 @@ struct Admin{
 	string password;
 };
 
-struct Reserva{
-	
-	string ruta;
-	string origen;
-	string destino;
-	string identicifacionCliente;
-	//Se sabe si el cliente viaja al extranjero o al interior des pais
-	//verificando el destino.
-	
-}reservas[1000];
-
   // se crea la estuctura de las rutas
 struct Ruta{
  string codigo;
@@ -73,7 +62,7 @@ struct Ruta{
    	 i++;
    }
    
-   //Se marca el Ã¹ltimo cliente como null para saber que ya no hay mas clientes
+   //Se marca el ùltimo cliente como null para saber que ya no hay mas clientes
    //en el vector
    c[i].Usuario = "\0";
    cout<<"SE HAN CARGADO: "<<i<<" CLIENTES"<<endl;
@@ -112,7 +101,7 @@ struct Ruta{
      
      i++;
    }
-   //Se marca la Ã¹ltima ruta como nula para indicar que no hay mÃ s rutas en el vector
+   //Se marca la ùltima ruta como nula para indicar que no hay màs rutas en el vector
    k[i].codigo = "\0";
    f.close();
    cout<<"SE HAN CARGADO: "<<i<<" RUTAS"<<endl;
@@ -152,6 +141,45 @@ void operacionadministrador(int &opcion){
   cin>>opcion;
 }
 
+void actualizarRutas(Ruta rutas[]){
+	//Este método actualiza todas ras rutas
+	
+	//variable archivo
+	ofstream archivo;
+	
+	//Crear el archivo
+	archivo.open("rutas.csv");
+	
+	//Variable para recorrer las rutas
+	int i=0;
+	//Variable para concatenar la ruta
+	string ruta, cupo,disponible, ocupada, precio;
+	//Recorrer el vector de rutas
+	while(rutas[i].codigo != "\0"){
+		
+		//Convertir entero a string para poder concatenarlo
+		cupo = static_cast<std::ostringstream*>(&(std::ostringstream() << rutas[i].cupo))->str();
+		disponible = static_cast<std::ostringstream*>(&(std::ostringstream() << rutas[i].disponible))->str();
+		ocupada = static_cast<std::ostringstream*>(&(std::ostringstream() << rutas[i].ocupada))->str();
+		precio = static_cast<std::ostringstream*>(&(std::ostringstream() << rutas[i].precio))->str();
+		
+		ruta = ""+rutas[i].codigo+","+rutas[i].rutas+","+rutas[i].origen+","+rutas[i].destino
+				+","+rutas[i].disponibilidad+","+rutas[i].tipo+","+rutas[i].hora
+				+","+cupo+","+disponible+","+ocupada
+				+","+rutas[i].fecha+","+precio+"\n";
+		
+		//Escribir la ruta en el archivo
+		archivo << ruta;
+		
+		//Aumenta la variable
+		i++;
+		
+	}
+	
+	archivo.close();
+	
+}
+
 void comprar(string codigoRuta, Ruta rutas[], cliente cliente1){
 	
 	//Variable para recorrer las rutas
@@ -163,31 +191,39 @@ void comprar(string codigoRuta, Ruta rutas[], cliente cliente1){
 		//Si la ruta actual es la ruta de la que se quiere comprar
 		if(rutas[i].codigo == codigoRuta){
 			
-			//Si la ruta aÃºn tiene cupos disponibles
+			//Si la ruta aún tiene cupos disponibles
 			if(rutas[i].disponible > 0){
 				//Se resta un cupo disponible a la ruta
 				rutas[i].disponible--;
 				//Se aumenta un cupo ocupado a la ruta
 				rutas[i].ocupada++;
 				
-				cout<<"ESCOGA UN MEDIO DE PAGO:\n\n";
-				cout<<"1. Efectivo\n";
-				cout<<"2. Tarjeta\n";
-				cout<<"INGRESE UNA OPCION: ";
-				cin>>medioDePago;
-				
-				if(medioDePago == "1"){
-					medioDePago = "EFECTIVO";
-				}else if(medioDePago == "2"){
-					medioDePago = "TARJETA";
-				}
+				do{
+					
+					cout<<"ESCOGA UN MEDIO DE PAGO:\n\n";
+					cout<<"1. Efectivo\n";
+					cout<<"2. Tarjeta de credito\n";
+					cout<<"3. Tarjeta debito\n";
+					cout<<"INGRESE UNA OPCION: ";
+					cin>>medioDePago;
+					
+					if(medioDePago == "1"){
+						medioDePago = "EFECTIVO";
+					}else if(medioDePago == "2"){
+						medioDePago = "TARJETA DE CREDITO";
+					}else if(medioDePago == "3"){
+						medioDePago = "TARJETA DEBITO";
+					}
+					
+				}while(medioDePago != "EFECTIVO" && medioDePago != "TARJETA DE CREDITO" && medioDePago != "TARJETA DEBITO");
 				
 				srand(time(NULL));
 				
 				int tiquete = rand();
 				
-				cout<<"\n\nÂ¡TIQUETE COMPRADO CON EXTIO!\n\n";
-				
+				cout<<"\n\n¡TIQUETE COMPRADO CON EXITO!\n\n";
+				cout<<"Detalles de factura:\n";
+				cout<<"-------------------------------------------------------\n";
 				cout<<"Empresa:                Los mas rapidos y furiosos 2\n";
 				cout<<"Codigo del tiquete:     "<<tiquete<<endl;
 				cout<<"Origen:                 "<<rutas[i].origen<<endl;
@@ -199,25 +235,21 @@ void comprar(string codigoRuta, Ruta rutas[], cliente cliente1){
 				cout<<"Forma de pago:          "<<medioDePago<<endl;
 				cout<<"Nombre Pasajero:        "<<cliente1.Nombre<<endl;
 				cout<<"Documento del pasajero: "<<cliente1.Usuario<<endl; //Es la identificacion
+				cout<<"-------------------------------------------------------\n";
 				
 				//Si se ha la cantidad de silla ocupadas
-				//es igual al cupo mÃ ximo, se indica que
-				//la ruta no estÃ  disponible
+				//es igual al cupo màximo, se indica que
+				//la ruta no està disponible
 				if(rutas[i].ocupada == rutas[i].cupo){
 					rutas[i].disponibilidad = "false";
 				}
-				
-				//Se crea la reserva
-				int x = 0;
-				while(reservas[x].destino != "\0"){
-					x++;//Aumenta la x
-				}
-				
+								
 				//Actualizar archivo de rutas
+				actualizarRutas(rutas);
 				
 			}else{
 				//Si no tiene cupos disponibles, se da un mensaje de error
-				cout<<"\n\nÂ¡LO SENTIMOS, ESTA RUTA NO TIENE CUPOS DOSPONIBLES!\n";
+				cout<<"\n\n¡LO SENTIMOS, ESTA RUTA NO TIENE CUPOS DOSPONIBLES!\n";
 			}
 			
 			//Terminar el ciclo de recorrer las rutas
@@ -248,20 +280,25 @@ void consultarRuta(Ruta rutas[],cliente cliente1){
 	cout<<"ID\tORIGEN\tDESTINO\tTIPO\tHORA\tCUPOS\tFECHA\tPRECIO"<<endl;
     cout<<"------------------------------------------------------------------------"<<endl;
 	
-	//Variable para Ã¨ndice del vector
+	//Variable para índice del vector
 	int i = 0;
+	//Variable para saber si se encontraron o no rutas disponibles
+	int rutasEncontradas = 0;
 	//Recorrer todas las rutas
 	while(rutas[i].codigo != "\0"){
 		
 		//Compara el origen, el destino y la fecha cada ruta con los datos ingresados
-		//y verifica que estÃ© disponible
+		//y verifica que esté disponible
 		if(rutas[i].origen == origen && rutas[i].destino == destino && rutas[i].fecha == fecha && rutas[i].disponibilidad == "true"){
 			
-			//Mostrar informaciÃ³n de la ruta
+			//Mostrar información de la ruta
 			cout<<rutas[i].codigo<<" "<<rutas[i].rutas<<" "<<rutas[i].origen<<" ";
 			cout<<rutas[i].destino<<" "<<rutas[i].disponibilidad<<" "<<rutas[i].tipo<<" ";
 			cout<<rutas[i].hora<<" "<<rutas[i].cupo<<" "<<rutas[i].disponible<<" ";
 			cout<<rutas[i].ocupada<<" "<<rutas[i].fecha<<" "<<rutas[i].precio<<endl;
+			
+			//Se dice que se encontró una ruta disponible
+			rutasEncontradas++;
 			
 		}
 		
@@ -270,12 +307,25 @@ void consultarRuta(Ruta rutas[],cliente cliente1){
 		
 	}
 	
+	//Si no se encuentran rutas que cumplan con los criterios
+	if(rutasEncontradas == 0){
+		
+		//Se muestra un mensaje dicendo que no se encontraron rutas que
+		//cumplan con los criterios
+		cout<<"\n\nNo se encontraron rutas que cumplan las condiciones\n\n";
+		system("PAUSE");
+		
+		//Se sale de la función
+		return;
+		
+	}
+	
 	char opc;
 	string codigo;
 	
 	//Ciclo para comprar tiquetes
 		//Pregunta si desea comprar un tiquete
-		cout<<"Â¿\nCOMPRAR TIQUETE?\n";
+		cout<<"¿\nCOMPRAR TIQUETE?\n";
 		cout<<"\n1. SI\n";
 		cout<<"2. NO\n";
 		
@@ -286,27 +336,44 @@ void consultarRuta(Ruta rutas[],cliente cliente1){
 		//Si el usuario deea comprar
 		if(opc == '1'){
 			
-			//Se pide el cÃ²digo de la ruta que desea comprar
-			cout<<"\nINGRESE EL CÃ“DIGO DE LA RUTA: ";
+			//Se pide el còdigo de la ruta que desea comprar
+			cout<<"\nINGRESE EL CÓDIGO DE LA RUTA: ";
 			cin>>codigo;
 			
-			//Se ejecuta la funciÃ²n de hacer la compra
+			//Se ejecuta la funciòn de hacer la compra
 			comprar(codigo,rutas,cliente1);
 			
 			//Pregunta si desea comprar otro tiquete
-			cout<<"\nÂ¿DESEA COMPRAR OTRO TIQUETE?\n";
+			cout<<"\n¿DESEA COMPRAR OTRO TIQUETE?\n";
 			cout<<"1. SI\n";
 			cout<<"2. NO\n";
-			cout<<"INGRESE UNA OPCIÃ“N: ";
+			cout<<"INGRESE UNA OPCIÓN: ";
 			cin>>opc;
 			
 		}else{
-			//Si no desea comprar, se sale de la funciÃ³n
+			//Si no desea comprar, se sale de la función
 			return;
 		}
 		
 		
-	}while(opc == '1');//Se repite si la opciÃ³n es 1.
+	}while(opc == '1');//Se repite si la opción es 1.
+	
+}
+
+bool iniciarAdmin(){
+	
+	string usuario, password;
+	
+	cout<<"INGRESE USUARIO: ";
+	cin>>usuario;
+	cout<<"INGRESE PASSWORD: ";
+	cin>>password;
+	
+	if(usuario == "mafe" && password == "1234"){
+		return true;
+	}else{
+		return false;
+	}
 	
 }
 
@@ -324,7 +391,7 @@ bool iniciarUsuario(cliente clientes[], cliente &c){
 	//Recorrer los clientes
 	while(clientes[i].Usuario != "\0"){
 		
-		//Comparar el Usuario y la contraseÃ±a
+		//Comparar el Usuario y la contraseña
 		if(clientes[i].Usuario == usuario && clientes[i].Password == password){
 			
 			//Si encuentra el cliente con ese id y con ese password
@@ -345,7 +412,7 @@ bool iniciarUsuario(cliente clientes[], cliente &c){
 		
 	}
 	
-	//Si llega a esta punto es porque no hubo algÃ¹n cliente con el usuario
+	//Si llega a esta punto es porque no hubo algùn cliente con el usuario
 	//y el password ingresados.
 	//Retorna false
 	return false;
@@ -385,7 +452,15 @@ void imprimirclientes(cliente clientes[]){
 	}
 }
 
-int buscarcliente(cliente clientes[], string id1){//manda la posición del elemento buscado, sino retorna -1
+void archivarcliente(string linea1){
+	string frase;
+	ofstream archivo;
+	archivo.open("clientes.csv",ios::app);
+  	archivo << linea1;
+	archivo.close();
+}
+
+int buscarcliente(cliente clientes[], string id1){//manda la posici? del elemento buscado, sino retorna -1
 	int i=0;
 	while(clientes[i].Usuario != "\0"){
 		if(clientes[i].Usuario == id1){
@@ -396,22 +471,49 @@ int buscarcliente(cliente clientes[], string id1){//manda la posición del elemen
 	return -1;
 }
 
-void archivarcliente(string linea1){
-	string frase;
-	ofstream archivo;
-	archivo.open("clientes.csv",ios::app);
-  	archivo << linea1;
-	archivo.close();
+void menu2(int &opc){
+	
+	cout<<"1. CONSULTAR RUTAS DISPONIBLES POR ORIGEN-DESTINO\n";
+	cout<<"2. VER DETALLE DE LA RUTA POR ID\n";
+	cout<<"3. COMPRAR TIQUETE\n";
+	cout<<"\nINGRESE UNA OPCION: ";
+	cin>>opc;
+	
 }
+
+void consultarRutaPorId(Ruta rutas[]){
+	string codigo;
+	
+	cout<<"\n\nINGRESE EL CODIGO DE LA RUTA: ";
+	cin>>codigo;
+	
+	int i=0;
+	while(rutas[i].codigo != "\0"){
+		
+		if(rutas[i].codigo == codigo){
+			
+			cout<<rutas[i].codigo<<" "<<rutas[i].rutas<<" "<<rutas[i].origen<<" ";
+			cout<<rutas[i].destino<<" "<<rutas[i].disponibilidad<<" "<<rutas[i].tipo<<" ";
+			cout<<rutas[i].hora<<" "<<rutas[i].cupo<<" "<<rutas[i].disponible<<" ";
+			cout<<rutas[i].ocupada<<" "<<rutas[i].fecha<<" "<<rutas[i].precio<<endl;
+			
+			break;
+		}
+		i++;
+	}
+	
+}
+
 
 void numeroreservas(Ruta rutas[]){
 	int i=0;
 	cout<<endl;
 	while(rutas[i].codigo != "\0"){
-		cout<<"PARA LA RUTA "<<rutas[i].codigo<<"SE HAN HECHO "<<rutas[i].disponible<<"RESERVAS"<<endl;
+		cout<<"PARA LA RUTA "<<rutas[i].codigo<<"SE HAN HECHO "<<rutas[i].disponible<<" RESERVAS"<<endl;
 		i++;
 	}
 }
+
 
 void origendestino(Ruta rutas[]){//Para una lista ordenada por origen-destino
 	int i=0, cont1=0;
@@ -507,15 +609,16 @@ void origendestino(Ruta rutas[]){//Para una lista ordenada por origen-destino
 	cout<<"Caracas \t  Cartagena \t "<<cont1<<endl;
 }
 
+
 void viajes(Ruta rutas[]){
 	int i=0, cont1=0, cont2=0;
 	while(rutas[i].codigo != "\0"){
-		if(rutas[i].origen=="caracas"){
+		if(rutas[i].destino!="caracas"){
 			cont1+=rutas[i].disponible;
 		}
 		i++;
 	}
-	cout<<cont1<<" viajaron desde Caracas a Colombia "<<endl;
+	cout<<cont1<<" viajaron en el interior del pais"<<endl;
 	
 	i=0;
 	while(rutas[i].codigo != "\0"){
@@ -524,32 +627,22 @@ void viajes(Ruta rutas[]){
 		}
 		i++;
 	}
-	cout<<cont2<<" viajaron a Caracas "<<endl<<endl;
+	cout<<cont2<<" viajaron al extranjero "<<endl<<endl;
 	
 	cout<<"EN total viajaron: "<<cont1+cont2<<" PAsajeros"<<endl<<endl;
 }
+
+
 // salida: en la funcion main se llaman las funciones anteriormente declaradas y se imprimen los datos
 int main(){
   	// se declaran la variables 
   	cliente clienteSesion;
-  	int opc=0;
-  	string j;
-  	string nombre;
-  	string apellido;
-  	int id;
-  	string password; 
-  	string origen;
-  	string destino;
-  	string fecha;
-  	ifstream f;
- 	 //char fd;
-  	string us;
+  	int opc=0,opc3=0;
   	
   	bool sesion;
   	
   	cliente clientes[1000];
   	Ruta rutas[1000];
-  	reservas[0].destino = "\0"; //Declaramos la primera reserva nula;
   
   	//administrador a[100];
   	cargardatosc(clientes);
@@ -557,32 +650,37 @@ int main(){
   
   	menu(opc);
   	
-  	//Probar Los clientes
-  	//cout<<clientes[1].Usuario<<" "<<clientes[1].Password<<" "<<clientes[1].Nombre<<" "<<clientes[1].Apellido<<endl;
-  	//Probar las rutas
-	/*cout<<rutas[1].codigo<<" "<<rutas[1].rutas<<" "<<rutas[1].origen<<" ";
-	cout<<rutas[1].destino<<" "<<rutas[1].disponibilidad<<" "<<rutas[1].tipo<<" ";
-	cout<<rutas[1].hora<<" "<<rutas[1].cupo<<" "<<rutas[1].disponible<<" ";
-	cout<<rutas[1].ocupada<<" "<<rutas[1].fecha<<" "<<rutas[1].precio<<endl;*/
-	
-	if(opc == 1){//Si se autenticÃ³ como cliente
+	if(opc == 1){//Si se autenticó como cliente
   		
-  		//Si iniciar usuario devulve false hubo un error en el inicio de sesiÃ³n,
-  		//Si devuelve true, iniciÃ³ sesiÃ³n correctamente.
+  		//Si iniciar usuario devulve false hubo un error en el inicio de sesión,
+  		//Si devuelve true, inició sesión correctamente.
   		sesion = iniciarUsuario(clientes,clienteSesion);
   		
   		if(sesion == true){
   			string opc2;
   			for(;;){
-				consultarRuta(rutas, clienteSesion);
+  				
+  				menu2(opc3);
+  				if(opc3 == 1){
+					consultarRuta(rutas, clienteSesion);
+				}else if(opc3 == 2){
+					consultarRutaPorId(rutas);
+				}else if(opc3 == 3){
+					
+					string codigo;
+					cout<<"\n\nINGRESE EL CODIGO DE LA RUTA: ";
+					cin>>codigo;
+					
+					comprar(codigo,rutas,clienteSesion);
+				}
 				
-				cout<<"\n\nÂ¿DESEA SALIR?\n";
+				cout<<"\n\n¿DESEA SALIR?\n";
 				cout<<"1. SI\n";
 				cout<<"OTRA TECLA. NO\n";
 				cout<<"INGRESE UNA OPCION:";
 				cin>>opc2;
 				
-				if(opc2 != "1"){
+				if(opc2 == "1"){
 					break;
 				}
 				
@@ -590,69 +688,67 @@ int main(){
 		}
 		else
 		{
-			cout<<"\n\nVERIFIQUE LOS DATOS DE INICIO DE SESIÃ“N\n\n";
+			cout<<"\n\nVERIFIQUE LOS DATOS DE INICIO DE SESIÓN\n\n";
 		}
   		
-	}else if(opc == 2){//Si se autenticÃ³ como administrador
-		int op=1, pos=0;
-		string id1, password1, nombre1, apellido1, linea1="";
-		while(op!=7){
-			system("cls");
-			menuAdmin();
-			cin>>op;
-			switch(op){
-				case 1:
-					system("cls");
-					cout<<"INGRESAR UN NUEVO CLIENTE"<<endl<<endl;
-					cout<<"INGRESE ID DE USUARIO: ";
-					cin>>id1;
-					while(buscarcliente(clientes, id1) != -1){//mientras exista un elemento con ese id
-						cout<<"\n\n\t...Ya existe ese usuario...\n\n";
+	}else if(opc == 2){//Si se autenticó como administrador
+		
+		sesion = iniciarAdmin();
+		if(sesion == true){
+			int op=1, pos=0;
+			string id1, password1, nombre1, apellido1, linea1="";
+			while(op!=7){
+				system("cls");
+				menuAdmin();
+				cin>>op;
+				switch(op){
+					case 1:
+						system("cls");
+						cout<<"INGRESAR UN NUEVO CLIENTE"<<endl<<endl;
 						cout<<"INGRESE ID DE USUARIO: ";
 						cin>>id1;
-					}
-					do{					
-						cout<<"INGRESE PASSWORD DE USUARIO (4 DIGITOS): ";
-						cin>>password1;
-					}while(password1.size()!=4);					
-					cout<<"INGRESE NOMBRE DE USUARIO: ";
-					cin>>nombre1;
-					cout<<"INGRESE APELLIDO DE USUARIO: ";
-					cin>>apellido1;	
-					pos=contarclientes(clientes);
-					clientes[pos].Usuario=id1;				
-					clientes[pos].Password=password1;				
-					clientes[pos].Nombre=nombre1;				
-					clientes[pos].Apellido=apellido1;
-					linea1='\n'+id1+','+password1+','+nombre1+','+apellido1;			
-					archivarcliente(linea1);
-					cout<<"\n...........GUARDADO EXITOSAMENTE................\n"<<endl;
-					system("pause");
-					break;
-				case 2:
-					system("cls");
-					cout<<"LISTADO DE CLIENTES"<<endl<<endl;
-					imprimirclientes(clientes);
-					system("pause");					
-					break;
-				case 3:
-					system("cls");
-					cout<<"BUSCAR PERSONA POR ID"<<endl<<endl;
-					cout<<"INGRESE ID A BUSCAR: ";
-					cin>>id1;
-					pos=buscarcliente(clientes, id1);
-					if(pos==-1){
-						cout<<"\n\n\t...NO EXISTE ESE CLIENTE...\n\n";
-					}else{
-						cout<<"\n\n  ID                  PASSWORD                  NOMBRE                  APELLIDO"<<endl;
-						cout<<"--------------------------------------------------------------------------------"<<endl;
-						//cout<<clientes[i].Usuario
-						cout<<clientes[pos].Usuario<<"                  "<<clientes[pos].Password<<"                  ";
-						cout<<clientes[pos].Nombre<<"                  "<<clientes[pos].Apellido<<endl<<endl<<endl;	
-					}										
-					system("pause");
-					break;
-				case 4:
+						do{					
+							cout<<"INGRESE PASSWORD DE USUARIO (4 DIGITOS): ";
+							cin>>password1;
+						}while(password1.size()!=4);					
+						cout<<"INGRESE NOMBRE DE USUARIO: ";
+						cin>>nombre1;
+						cout<<"INGRESE APELLIDO DE USUARIO: ";
+						cin>>apellido1;	
+						pos=contarclientes(clientes);
+						clientes[pos].Usuario=id1;				
+						clientes[pos].Password=password1;				
+						clientes[pos].Nombre=nombre1;				
+						clientes[pos].Apellido=apellido1;
+						linea1='\n'+id1+','+password1+','+nombre1+','+apellido1;			
+						archivarcliente(linea1);
+						cout<<"GUARDADO EXITOSAMENTE"<<endl;
+						system("pause");
+						break;
+					case 2:
+						system("cls");
+						cout<<"LISTADO DE CLIENTES"<<endl<<endl;
+						imprimirclientes(clientes);
+						system("pause");					
+						break;
+					case 3:
+						system("cls");
+						cout<<"BUSCAR PERSONA POR ID"<<endl<<endl;
+						cout<<"INGRESE ID A BUSCAR: ";
+						cin>>id1;
+						pos=buscarcliente(clientes, id1);
+						if(pos==-1){
+							cout<<"\n\n\t...NO EXISTE ESE CLIENTE...\n\n";
+						}else{
+							cout<<"\n\n  ID                  PASSWORD                  NOMBRE                  APELLIDO"<<endl;
+							cout<<"--------------------------------------------------------------------------------"<<endl;
+							//cout<<clientes[i].Usuario
+							cout<<clientes[pos].Usuario<<"                  "<<clientes[pos].Password<<"                  ";
+							cout<<clientes[pos].Nombre<<"                  "<<clientes[pos].Apellido<<endl<<endl<<endl;	
+						}										
+						system("pause");
+						break;
+					case 4:
 				system("cls");
 					cout<<"LISTADO DE RESERVAS"<<endl<<endl;
 					numeroreservas(rutas);
@@ -671,7 +767,11 @@ int main(){
 					system("pause");					
 					break;
 				default: break;
+				}
 			}
+		}else
+		{
+			cout<<"\n\nVERIFIQUE LOS DATOS DE INICIO DE SESIÓN\n\n";
 		}
 	}else{//Opción salir
   		cout<<"::GRACIAS POR CONSULTAR NUESTRO MENU::"<<endl;// se imprime un mensaje de salida

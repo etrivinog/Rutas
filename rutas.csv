@@ -6,7 +6,7 @@ RN05,nac,bogota,cartagena,true,dob,22:00,50,0,50,01-dic,80000
 RN06,nac,bogota,cartagena,true,dob,22:00,50,0,50,10-dic,80000
 RN07,nac,bogota,cartagena,true,dob,22:00,50,0,50,20-dic,80000
 RN08,nac,bogota,cartagena,true,dob,22:00,50,0,50,30-dic,80000
-RN09,nac,cartagena,bogota,true,pre,05:00,32,31,1,02-dic,100000
+RN09,nac,cartagena,bogota,true,pre,05:00,32,26,6,02-dic,100000
 RN10,nac,cartagena,bogota,true,pre,05:00,32,0,32,11-dic,100000
 RN11,nac,cartagena,bogota,true,pre,05:00,32,0,32,21-dic,100000
 RN12,nac,cartagena,bogota,true,pre,05:00,32,29,3,31-dic,100000
