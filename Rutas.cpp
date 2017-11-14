@@ -234,7 +234,7 @@ void comprar(string codigoRuta, Ruta rutas[], cliente cliente1){
 				
 				cout<<"\n\n¡TIQUETE COMPRADO CON EXITO!\n\n";
 				cout<<"Detalles de factura:\n";
-				cout<<"-------------------------------------------------------";
+				cout<<"-------------------------------------------------------\n";
 				cout<<"Empresa:                Los mas rapidos y furiosos 2\n";
 				cout<<"Codigo del tiquete:     "<<tiquete<<endl;
 				cout<<"Origen:                 "<<rutas[i].origen<<endl;
@@ -246,7 +246,7 @@ void comprar(string codigoRuta, Ruta rutas[], cliente cliente1){
 				cout<<"Forma de pago:          "<<medioDePago<<endl;
 				cout<<"Nombre Pasajero:        "<<cliente1.Nombre<<endl;
 				cout<<"Documento del pasajero: "<<cliente1.Usuario<<endl; //Es la identificacion
-				cout<<"-------------------------------------------------------";
+				cout<<"-------------------------------------------------------\n";
 				
 				//Si se ha la cantidad de silla ocupadas
 				//es igual al cupo màximo, se indica que
