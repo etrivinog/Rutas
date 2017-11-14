@@ -237,11 +237,8 @@ void consultarRuta(Ruta rutas[],cliente cliente1){
 	
 	string origen, destino, fecha;
 	cout<<"..::CONSULTA DE RUTAS::..";
-<<<<<<< HEAD
 	cout<<"INGRESE UN ORIGEN: ";
-=======
 	cout<<"\nINGRESE UN ORIGEN: ";
->>>>>>> a46b77bb3552c9a59970c406f3d31d7edb32ba60
 	cin>>origen;
 	cout<<"INGRESE UN DESTINO: ";
 	cin>>destino;
@@ -398,6 +395,17 @@ void imprimirclientes(cliente clientes[]){
 	}
 }
 
+int buscarcliente(cliente clientes[], string id1){//manda la posición del elemento buscado, sino retorna -1
+	int i=0;
+	while(clientes[i].Usuario != "\0"){
+		if(clientes[i].Usuario == id1){
+			return i;
+		}
+		i++;
+	}
+	return -1;
+}
+
 // salida: en la funcion main se llaman las funciones anteriormente declaradas y se imprimen los datos
 int main(){
   	// se declaran la variables 
@@ -476,6 +484,11 @@ int main(){
 					cout<<"INGRESAR UN NUEVO CLIENTE"<<endl<<endl;
 					cout<<"INGRESE ID DE USUARIO: ";
 					cin>>id1;
+					while(buscarcliente(clientes, id1) != -1){//mientras exista un elemento con ese id
+						cout<<"\n\n\t...Ya existe ese usuario...\n\n";
+						cout<<"INGRESE ID DE USUARIO: ";
+						cin>>id1;
+					}
 					do{					
 						cout<<"INGRESE PASSWORD DE USUARIO (4 DIGITOS): ";
 						cin>>password1;
@@ -491,7 +504,7 @@ int main(){
 					clientes[pos].Apellido=apellido1;
 					linea1='\n'+id1+','+password1+','+nombre1+','+apellido1;			
 					archivarcliente(linea1);
-					cout<<"GUARDADO EXITOSAMENTE"<<endl;
+					cout<<"\n...........GUARDADO EXITOSAMENTE................\n"<<endl;
 					system("pause");
 					break;
 				case 2:
@@ -501,6 +514,21 @@ int main(){
 					system("pause");					
 					break;
 				case 3:
+					system("cls");
+					cout<<"BUSCAR PERSONA POR ID"<<endl<<endl;
+					cout<<"INGRESE ID A BUSCAR: ";
+					cin>>id1;
+					pos=buscarcliente(clientes, id1);
+					if(pos==-1){
+						cout<<"\n\n\t...NO EXISTE ESE CLIENTE...\n\n";
+					}else{
+						cout<<"\n\n  ID                  PASSWORD                  NOMBRE                  APELLIDO"<<endl;
+						cout<<"--------------------------------------------------------------------------------"<<endl;
+						//cout<<clientes[i].Usuario
+						cout<<clientes[pos].Usuario<<"                  "<<clientes[pos].Password<<"                  ";
+						cout<<clientes[pos].Nombre<<"                  "<<clientes[pos].Apellido<<endl<<endl<<endl;	
+					}										
+					system("pause");
 					break;
 				default: break;
 			}
