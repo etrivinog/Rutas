@@ -28,7 +28,6 @@ struct Admin{
 	string password;
 };
 
-
 struct Reserva{
 	
 	string ruta;
@@ -237,7 +236,10 @@ void consultarRuta(Ruta rutas[],cliente cliente1){
 	
 	string origen, destino, fecha;
 	cout<<"..::CONSULTA DE RUTAS::..";
+<<<<<<< HEAD
 	cout<<"INGRESE UN ORIGEN: ";
+=======
+>>>>>>> 06f7b704619affa8c47355106b282aca64c7bda6
 	cout<<"\nINGRESE UN ORIGEN: ";
 	cin>>origen;
 	cout<<"INGRESE UN DESTINO: ";
@@ -367,14 +369,6 @@ void menuAdmin(){
 	
 }
 
-void archivarcliente(string linea1){
-	string frase;
-	ofstream archivo;
-	archivo.open("clientes.csv",ios::app);
-  	archivo << linea1;
-	archivo.close();
-}
-
 int contarclientes(cliente clientes[]){
 	int i=0;
 	while(clientes[i].Usuario != "\0"){
@@ -395,6 +389,7 @@ void imprimirclientes(cliente clientes[]){
 	}
 }
 
+<<<<<<< HEAD
 int buscarcliente(cliente clientes[], string id1){//manda la posición del elemento buscado, sino retorna -1
 	int i=0;
 	while(clientes[i].Usuario != "\0"){
@@ -406,6 +401,17 @@ int buscarcliente(cliente clientes[], string id1){//manda la posición del elemen
 	return -1;
 }
 
+=======
+void archivarcliente(string linea1){
+	string frase;
+	ofstream archivo;
+	archivo.open("clientes.csv",ios::app);
+  	archivo << linea1;
+	archivo.close();
+}
+
+
+>>>>>>> 06f7b704619affa8c47355106b282aca64c7bda6
 // salida: en la funcion main se llaman las funciones anteriormente declaradas y se imprimen los datos
 int main(){
   	// se declaran la variables 
@@ -443,7 +449,7 @@ int main(){
 	cout<<rutas[1].hora<<" "<<rutas[1].cupo<<" "<<rutas[1].disponible<<" ";
 	cout<<rutas[1].ocupada<<" "<<rutas[1].fecha<<" "<<rutas[1].precio<<endl;*/
 	
-	if(opc == 1){//Si se autenticó como cliente
+	if(opc == 1){//Si se autenticÃ³ como cliente
   		
   		//Si iniciar usuario devulve false hubo un error en el inicio de sesiÃ³n,
   		//Si devuelve true, iniciÃ³ sesiÃ³n correctamente.
@@ -471,7 +477,7 @@ int main(){
 			cout<<"\n\nVERIFIQUE LOS DATOS DE INICIO DE SESIÃ“N\n\n";
 		}
   		
-	}else if(opc == 2){//Si se autenticó como administrador
+	}else if(opc == 2){//Si se autenticÃ³ como administrador
 		int op=1, pos=0;
 		string id1, password1, nombre1, apellido1, linea1="";
 		while(op!=7){
@@ -533,7 +539,7 @@ int main(){
 				default: break;
 			}
 		}
-	}else{//Opción salir
+	}else{//OpciÃ³n salir
   		cout<<"::GRACIAS POR CONSULTAR NUESTRO MENU::"<<endl;// se imprime un mensaje de salida
   	}
   return 0;
